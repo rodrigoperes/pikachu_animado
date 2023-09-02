@@ -1,5 +1,7 @@
 import pygame
 
+# Fontes dos sprites: https://www.spriters-resource.com/custom_edited/pokemongeneration1customs/sheet/148148/
+
 class Pikachu(pygame.sprite.Sprite):
     def __init__(self, nome, sexo, nivel):
         pygame.sprite.Sprite.__init__(self)
@@ -10,6 +12,8 @@ class Pikachu(pygame.sprite.Sprite):
         self.y = 100
         self.velocidade = 1
         self.correndo = False
+        self.pulando = False
+        self.pulou = False
         self.orientacao = 'direita'
         self.sprites = [
                  pygame.image.load('classes/sprites/sprite_pikachu00.png')
@@ -64,6 +68,26 @@ class Pikachu(pygame.sprite.Sprite):
             ,pygame.image.load('classes/sprites/sprite_pikachu_esq20.png')
             ,pygame.image.load('classes/sprites/sprite_pikachu_esq21.png')
         ]
+        self.sprites_pulo_esq = [
+             pygame.image.load('classes/sprites/sprite_pikachu_pulando00.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando01.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando02.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando03.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando04.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando05.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando06.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando07.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando08.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando09.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando10.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando11.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando12.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando13.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando14.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando15.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando16.png')
+            ,pygame.image.load('classes/sprites/sprite_pikachu_pulando17.png')
+        ]
         self.atual = 0
         self.image = self.sprites[self.atual]
         self.image = pygame.transform.scale(self.image, (178*3, 71*3))
@@ -97,6 +121,12 @@ class Pikachu(pygame.sprite.Sprite):
         elif self.orientacao == 'esquerda':
             self.sprites = self.sprites_corrida_esq
 
+    def pular(self):
+        self.animado = True
+        self.pulando = True
+        if self.orientacao == 'esquerda':
+            self.sprites = [self.image] + self.sprites_pulo_esq
+
     def parar(self):
         self.animado = False
         self.correndo = False
@@ -115,6 +145,11 @@ class Pikachu(pygame.sprite.Sprite):
             if self.atual >= len(self.sprites):
                 self.atual = 0
                 self.animado = False
+                if self.pulando:
+                    self.y = self.y + 100*self.velocidade
+                    self.rect.topleft = self.x, self.y
+                    self.pulando = False
+                    self.pulou = False
             self.image = self.sprites[int(self.atual)]
             self.image = pygame.transform.scale(self.image, (178*3, 71*3))
             if self.correndo:
@@ -124,6 +159,13 @@ class Pikachu(pygame.sprite.Sprite):
                 elif self.orientacao == 'esquerda':
                     self.x = self.x - self.velocidade
                 self.rect.topleft = self.x, self.y
+            print(self.pulou)
+            if self.pulando and (not self.pulou):
+                self.pulou = True
+                print('Pulou!')
+                self.y = self.y - 100*self.velocidade
+                self.rect.topleft = self.x, self.y
+                
 
     def falar(self):
         print("Pika Pika!")

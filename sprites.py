@@ -33,6 +33,8 @@ while True:
                 if pikachu.orientacao == 'esquerda':
                     pikachu.mudar_direcao('direita')
                 pikachu.correr()
+            if event.key == K_UP:
+                pikachu.pular()
         if event.type == KEYUP:
             if event.key == K_LEFT or event.key == K_RIGHT:
                 pikachu.parar()
